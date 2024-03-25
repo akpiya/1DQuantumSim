@@ -20,10 +20,15 @@ double QLSolver::pythag(const double a, const double b) {
     }
 }
 
-void QLSolver::tqli(vector<double>* d_ptr, vector<double>* e_ptr, vector<vector<double>>* z_ptr) {
-    vector<double>& d = *d_ptr;
-    vector<double>& e = *e_ptr;
-    vector<double>& z = *z_ptr;
+double QLSolver::sign(double a, double b) {
+    if (b >= 0) {
+        return abs(a);
+    } else{
+        return -1.0 * abs(a);
+    };
+}
+
+void QLSolver::tqli(vector<double> &d, vector<double> &e, vector<vector<double>> &z) {
 
     int n = d.size();
     int m,l,iter,i,k;
@@ -44,7 +49,7 @@ void QLSolver::tqli(vector<double>* d_ptr, vector<double>* e_ptr, vector<vector<
                 if (iter++ == 30) throw("Too many iterations");
                 g = (d[l+1] - d[l]) / (2.0 * e[l]);
                 r = pythag(g, 1.0);
-                g = d[m] - d[l] + e[l]/(g+SIGN(r,g));
+                g = d[m] - d[l] + e[l]/(g + QLSolver::sign(r,g));
 
                 s=c=1.0;
                 p=0.0;
@@ -76,4 +81,12 @@ void QLSolver::tqli(vector<double>* d_ptr, vector<double>* e_ptr, vector<vector<
             e[m] = 0.0;
         } while (m != l);
     }
+}
+
+vector<vector<double>> QLSolver::create_identity(int n) {
+    vector<vector<double>> I(n, vector<double>(n, 0.0));
+    for (int i=0;i<n;i++) {
+        I[i][i] = 1.0;
+    }
+    return I;
 }

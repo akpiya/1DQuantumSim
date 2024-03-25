@@ -17,12 +17,11 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
 set(PROJECT_SOURCES
         src/main.cpp
         src/mainwindow.cpp
-        src/qcustomplot.cpp
-        include/qcustomplot.h
         include/mainwindow.h
         forms/mainwindow.ui
         src/solver.cpp
         include/solver.h
+        tests/testing.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -69,6 +68,12 @@ set_target_properties(QuantumSim PROPERTIES
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
 )
+
+add_subdirectory(src)
+
+##### Testing configuration
+add_subdirectory(tests)
+#####
 
 include(GNUInstallDirs)
 install(TARGETS QuantumSim

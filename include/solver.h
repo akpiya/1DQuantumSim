@@ -12,7 +12,11 @@ using std::vector;
 class QLSolver
 {
 public:
-    void tqli(vector<double>* d, vector<double>* e, vector<vector<double>>* z);
-    double pythag(const double a, const double b);
+    static void tqli(vector<double> &d, vector<double> &e, vector<vector<double>> &z);
+    static vector<vector<double>> create_identity(int n);
+
+private:
+    static double pythag(const double a, const double b);
+    static double sign(double a, double b);
 };
 #endif //QUANTUMSIM_SOLVER_H
