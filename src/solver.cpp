@@ -22,25 +22,38 @@ double QLSolver::pythag(const double a, const double b) {
 
 double QLSolver::sign(double a, double b) {
     if (b >= 0) {
-        return abs(a);
+        if (a >= 0) {
+            return a;
+        } else {
+            return -a;
+        }
     } else{
-        return -1.0 * abs(a);
+        if (a >= 0) {
+            return -a;
+        } else{
+            return a;
+        }
     };
 }
 
+// finds eigenvalues and eigenvectors of a symmetric, tridiagonal matrix
+// from "Numerical Recipes in C" by Press, Flannery, et al.
 void QLSolver::tqli(vector<double> &d, vector<double> &e, vector<vector<double>> &z) {
-
     int n = d.size();
     int m,l,iter,i,k;
     double s,r,p,g,f,dd,c,b;
 
     const double EPS = std::numeric_limits<double>::epsilon();
 
+    for (i=1;i<n;i++)
+        e[i-1]=e[i];
+    e[n-1]=0.0;
+
     //Assume d is of n length and e is of n length but only the first n-1 values matter
     for (l=0; l<n; l++) {
         iter=0;
         do {
-            for (m=l;m<=n-1;m++) {
+            for (m=l;m<n-1;m++) {
                 dd = abs(d[m]) + abs(d[m+1]);
                 if (abs(e[m]) <= EPS * dd)
                     break;
@@ -53,7 +66,7 @@ void QLSolver::tqli(vector<double> &d, vector<double> &e, vector<vector<double>>
 
                 s=c=1.0;
                 p=0.0;
-                for (i=m-1;i>=1;i--) {
+                for (i=m-1;i>=l;i--) {
                     f=s*e[i];
                     b=c*e[i];
                     e[i+1] = (r=pythag(f,g));
@@ -75,7 +88,7 @@ void QLSolver::tqli(vector<double> &d, vector<double> &e, vector<vector<double>>
                     }
                 }
             }
-            if (r == 0.0 && i >= 1) continue;
+            if (r == 0.0 && i >= l) continue;
             d[l] -= p;
             e[l] = g;
             e[m] = 0.0;
